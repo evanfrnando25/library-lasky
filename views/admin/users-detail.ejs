@@ -44,15 +44,17 @@
                   <tr>
                     <th scope="row">Photo Profile</th>
                     <th>:</th>
-                    <td><img id="img" src="<%= users.profile_picture %>" alt="<%= users.profile_picture %>" width="150" height="200"></td>
+                    <td>
+                      <img class="image-preview img-thumbnail rounded-circle" src="<%= users.profilePicturePath %>" alt="image preview" width="150" height="200">
+                    </td>
                   </tr>
                 </tbody>
               </table>
-              <form action="/admin/user?_method=DELETE" method="POST" class="d-grid gap-2 d-md-block mb-0">
+              <form action="/admin/users?_method=DELETE" method="POST" class="d-grid gap-2 d-md-block mb-0">
                 <a href="/admin/users" class="btn btn-secondary">Back to user list</a>
                 <a href="/admin/users/update/<%= users._id %>" class="btn btn-info">Edit user</a>
                 <input type="hidden" name="users_id" value="<%= users._id %>" />
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete this book?')">Delete Book</button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete this book?')">Delete User</button>
               </form>
             </div>
           </div>
@@ -61,3 +63,14 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  const profilePicture = document.querySelector('#profile_picture')
+  const imagePreview = document.querySelector('.image-preview')
+
+  profilePicture.addEventListener('change', () => {
+    const url = URL.createObjectURL(profilePicture.files[0])
+    imagePreview.src = url
+  });
+</script>

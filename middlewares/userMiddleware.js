@@ -11,6 +11,18 @@ const editProfileValidator = [
   })
 ]
 
+
+const userValidator = [
+  body('email').custom(async (value, { req }) => {
+    const isDuplicate = await User.findOne({ user: value })
+    if(value !== req.body.oldEmail && isDuplicate) {
+        throw new Error('This Emailis already exists')
+    }
+    return true
+  }),
+]
+
+
 const borrowValidator = [
   body('returnDate').custom((value, { req }) => {
     const { borrowDate } = req.body
@@ -51,5 +63,6 @@ const genreList = (req, res, next) => {
 module.exports = {
   editProfileValidator,
   borrowValidator,
+  userValidator,
   genreList
 }

@@ -245,6 +245,85 @@ exports.view_orders = async (req, res) => {
   }
 }
 
+exports.update_book_view = async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id)
+    res.render('admin/book-update', { book, genres })
+  } catch(err) {
+    console.log(err)
+    res.redirect('/admin')
+  }
+}
+
+
+exports.delete_users = async (req, res) => {
+  try {
+    const user = await User.findById(req.body.users_id)
+    if(user.profile_picture !== 'default_user.svg') {
+      removeImage(user.profilePicturePath)
+    }    
+    await user.remove()
+    req.flash('msg', `User has been deleted!`)
+    res.redirect(`/admin/users`)
+  } catch(err) {
+    console.log(err)
+    res.redirect('/admin')
+  }
+}
+
+exports.update_users = async (req, res) => {
+  const { role , name, email} = req.body
+  const errors = validationResult(req)
+  if(!errors.isEmpty()) {
+    try {
+      if(req.files.profile_picture) removeImage(req.files.profile_picture[0].path)
+      const users = await User.findById(req.body.id)
+      res.render('admin/users-update', {
+        errors: errors.array(),
+        users,
+      })
+    } catch(err) {
+      console.log(err)
+      res.redirect('/admin')
+    }
+  } else {
+    let profile_picture
+    if(req.files.profile_picture) {
+      User.findById(req.body.id)
+        .then(user => {
+           if(user.profile_picture !== 'default_user.svg') {
+            removeImage(user.profilePicturePath)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          res.redirect('/admin')
+        })
+      profile_picture = req.files.profile_picture[0].filename
+    } else {
+      try {
+        const users = await User.findById(req.body.id)
+        profile_picture = users.profile_picture
+      } catch (err) {
+        console.log(err)
+        res.redirect('/admin')
+      }
+    }
+    User.updateOne(
+      { _id: req.body.id },
+      { $set: {
+        role , name, email, profile_picture}
+      })
+      .then(result => {
+        req.flash('msg', `User has been updated!`)
+        res.redirect(`/admin/users/detail/${req.body.id}`)
+      })
+      .catch(err => {
+        console.log(err)
+        res.redirect('/admin')
+      })
+  }
+}
 
 exports.detail_users = async (req, res) => {
   try {

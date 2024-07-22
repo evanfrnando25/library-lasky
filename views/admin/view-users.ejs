@@ -14,17 +14,24 @@
                   <th scope="col">Full Name</th>
                   <th scope="col">Email</th>
                   <th scope="col">Registration Date</th>
+                  <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody>
                 <% if (users.length > 0) { %>
                   <% users.forEach((user, i) => { %>
                     <tr>
-                      <th scope="row"><%= ++i %></th>
+                      <th scope="row"><%= i + 1 %></th>
                       <td><img src="<%= user.profilePicturePath %>" alt="<%= user.name %>" class="img-thumbnail rounded-circle" width="75"></td>
                       <td><%= user.name %></td>
                       <td><%= user.email %></td>
                       <td><%= new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'long', day: '2-digit'}).format(user.created_at) %></td>
+                      <td>
+                        <form action="/admin/book?_method=DELETE" method="POST" class="d-grid gap-2 d-md-block mb-0">
+                        <a href="/admin/users/detail/<%= user._id %>" class="btn btn-secondary badge">Detail</a>
+                        <input type="hidden" name="user_id" value="<%= user._id %>" />
+                        </form>
+                      </td>
                     </tr>
                   <% }) %>
                 <% } else { %>

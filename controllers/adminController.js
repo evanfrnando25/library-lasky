@@ -5,6 +5,11 @@ const { validationResult } = require('express-validator')
 const path = require('path')
 const fs = require('fs')
 
+const roles = [
+  'Admin',
+  'Customer'
+]
+
 const genres = [
   'Art', 
   'Science Fiction', 
@@ -210,9 +215,7 @@ exports.view_orders = async (req, res) => {
 
     BorrowHistory.find({ status: "Returned", book_returned: false })
       .then(returnedBook => {
-        // console.log("returnedBook", returnedBook)
         returnedBook.forEach(async book => {
-          // console.log("Book", book)
           await Book.updateMany(
             { _id: book.borrowed_book },
             { $inc: { stock: 1 } }
@@ -236,6 +239,28 @@ exports.view_orders = async (req, res) => {
         console.log(err)
         res.redirect('/admin')
       })
+  } catch(err) {
+    console.log(err)
+    res.redirect('/admin')
+  }
+}
+
+
+exports.detail_users = async (req, res) => {
+  try {
+    const users = await User.findById(req.params.id)
+    console.log(users)
+    res.render('admin/users-detail', { users , msg: req.flash('msg') })
+  } catch (err) {
+    console.log(err)
+    res.redirect('/admin')
+  }
+}
+
+exports.update_user_view = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+    res.render('admin/users-update', { user , roles })
   } catch(err) {
     console.log(err)
     res.redirect('/admin')

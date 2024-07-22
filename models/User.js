@@ -60,8 +60,10 @@ userSchema.statics.login = async function (email, password) {
 }
 
 userSchema.virtual('profilePicturePath').get(function() {
-  if (this.profile_picture !== null) {
+  if (this.profile_picture) {
     return path.join('/', profilePictureBasePath, this.profile_picture)
+  } else {
+    return path.join('/', profilePictureBasePath, 'default_user.svg')
   }
 })
 

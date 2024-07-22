@@ -1,0 +1,68 @@
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+      <%- include('../partials/admin-sidebar') %>
+      <div class="col py-3">
+        <div class="col overflow-auto h-100">
+          <div class="bg-light border rounded-3 p-3">
+            <h2 class="mb-3 display-4">Edit user</h2>
+            <form method="POST" action="/admin/user?_method=PUT" enctype="multipart/form-data">
+              <input type="hidden" name="id" value="<%= user.id %>">
+              <input type="hidden" name="oldISBN" value="<%= user.oldISBN || user.isbn %>">
+              <div class="mb-3">
+                <label for="isbn" class="form-label">User ID</label>
+                <input type="text" class="form-control" disabled id="isbn" name="isbn" value="<%= user._id %>" required>
+                <% if (typeof errors !== 'undefined') { %>
+                  <% errors.forEach(err => { %>
+                    <% if (err.param === 'isbn') { %>
+                      <p class="text-danger fw-bold mb-0"><%= err.msg %></p>
+                    <% } %>
+                  <% }) %>
+                <% } %>
+              </div>
+              <div class="mb-3">
+                <label for="title" class="form-label">Name</label>
+                <input type="text" class="form-control" id="title" name="title" value="<%= user.name %>" required >
+              </div>
+              <div class="mb-3">
+                <label for="author" class="form-label">Email</label>
+                <input type="text" class="form-control" name="author" value="<%= user.email %>" required>
+              </div>
+              <div class="mb-3">
+                <label for="genre" class="form-label">Genre</label>
+                <select class="form-select" name="role"  required>
+                    <option value="" disabled>Choose Role</option>
+                    <% roles.filter(genre => genre !== (user.role === 0 ? 'Customer' : 'Admin') ).map(genre => { %>
+                        <option value="<%= genre %>" selected="<% user.role == 0 ? 'Customer' : 'Admin' %>"><%= genre %></option>
+                    <% }) %>
+              </select>
+              </div>
+              <div class="mb-3">
+                <label for="image-preview" class="form-label">Image Preview</label><br>
+                <img class="image-preview" src="<%= user.coverImagePath %>" alt="image-preview" width="150" height="200">
+              </div>
+              <div class="mb-3">
+                <label for="cover_image" class="form-label">Cover Image</label>
+                <input class="form-control" type="file" id="cover_image" name="cover_image">
+              </div>
+              <div class="float-end mb-5">
+                <a href="/admin/user" class="btn btn-secondary">Back to user list</a>
+                <button type="submit" class="btn btn-primary" onsubmit="preventDefault()">Update user</button>
+              </div>
+              <br>
+              <br>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const cover_image = document.querySelector('#cover_image')
+    const imagePreview = document.querySelector('.image-preview')
+  
+    cover_image.addEventListener('change', () => {
+      const url = URL.createObjectURL(cover_image.files[0])
+      imagePreview.src = url
+    });
+  </script>

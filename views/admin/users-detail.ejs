@@ -1,0 +1,63 @@
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <%- include('../partials/admin-sidebar') %>
+    <div class="col py-3">
+      <div class="col overflow-auto h-100">
+        <div class="bg-light border rounded-3 p-3">
+          <h2 class="mb-3 display-4">Users Detail</h2>
+          <div class="row">
+            <div class="col-md-8">
+              <% if (msg.length !== 0) { %>
+                <div class="alert alert-info fw-bold" role="alert">
+                  <%= msg %>
+                </div>
+              <% } %>
+              <table class="table table-borderless">
+                <tbody>
+                  <tr>
+                    <th scope="row">Name</th>
+                    <th>:</th>
+                    <td><%= users.name %></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Role</th>
+                    <th>:</th>
+                    <td>
+                      <% if (users.role === 0) { %>
+                        Admin
+                      <% } %>
+                      <% if (users.role === 1) { %>
+                        Customer
+                      <% } %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Email</th>
+                    <th>:</th>
+                    <td><%= users.email %></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Created At</th>
+                    <th>:</th>
+                    <td><%= new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'long', day: '2-digit'}).format(users.created_at) %></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Photo Profile</th>
+                    <th>:</th>
+                    <td><img id="img" src="<%= users.profile_picture %>" alt="<%= users.profile_picture %>" width="150" height="200"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <form action="/admin/user?_method=DELETE" method="POST" class="d-grid gap-2 d-md-block mb-0">
+                <a href="/admin/users" class="btn btn-secondary">Back to user list</a>
+                <a href="/admin/users/update/<%= users._id %>" class="btn btn-info">Edit user</a>
+                <input type="hidden" name="users_id" value="<%= users._id %>" />
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete this book?')">Delete Book</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

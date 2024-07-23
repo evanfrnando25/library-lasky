@@ -1,6 +1,7 @@
 const express = require('express')
 const adminController = require('../controllers/adminController')
 const { bookValidator } = require('../middlewares/bookMiddleware')
+const { userValidator } = require('../middlewares/userMiddleware')
 const { checkUser } = require('../middlewares/authMiddleware')
 
 const router = express.Router()
@@ -19,8 +20,9 @@ router.get('/book/:page?', adminController.books)
 router.get('/orders', adminController.view_orders)
 
 // View Users
+router.delete('/users', adminController.delete_users)
 router.get('/users', adminController.view_users)
-router.put('/book', checkUser, bookValidator, adminController.update_book)
+router.put('/users', checkUser, userValidator, adminController.update_users)
 router.get('/users/update/:id', adminController.update_user_view)
 router.get('/users/detail/:id', adminController.detail_users)
 

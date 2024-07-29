@@ -1,0 +1,87 @@
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+      <%- include('../partials/admin-sidebar') %>
+      <div class="col py-3">
+        <div class="col overflow-auto h-100">
+          <div class="bg-light border rounded-3 p-3">
+            <h2 class="mb-3 display-4">Add Users</h2>
+            <form method="POST" action="/admin/users?_method=PUT" enctype="multipart/form-data">
+              <div class="mb-3">
+                <% if (typeof errors !== 'undefined') { %>
+                  <% errors.forEach(err => { %>
+                    <% if (err.param === 'email') { %>
+                      <p class="text-danger fw-bold mb-0"><%= err.msg %></p>
+                    <% } %>
+                  <% }) %>
+                <% } %>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="" required >
+              </div>
+              <div class="mb-3">
+                <label for="nis" class="form-label">Nomor Induk Siswa</label>
+                <input type="text" class="form-control" id="nis" name="nis" value="" required >
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" class="form-control" name="email" value="" required>
+              </div>
+              <div class="mb-3">
+                <label for="role" class="form-label">Role</label>
+                <select class="form-select" name="role" required>
+                  <option value="" disabled>Choose Role</option>
+                  <option value="0" <%= user.role === 0 ? 'selected' : '' %>>Admin</option>
+                  <option value="1" <%= user.role === 1 ? 'selected' : '' %>>Customer</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Password</label>
+                <input type="text" class="form-control" id="password"  name="password" value="" required>
+                <button type="button" class="btn mt-3 btn-secondary" id="generatePasswordBtn">Generate Password</button>
+              </div>
+              <div class="mb-3">
+                <label for="image-preview" class="form-label">Image Preview</label><br>
+                <img class="image-preview" src="<%= user.profilePicturePath %>" alt="image-preview" width="150" height="200">
+              </div>
+              <div class="mb-3">
+                <label for="profile_picture" class="form-label">Profile Picture</label>
+                <input class="form-control" type="file" id="profile_picture" name="profile_picture">
+              </div>
+              <div class="float-end mb-5 mt-2">
+                <button type="submit" class="btn btn-primary" onsubmit="preventDefault()">Add Users</button>
+              </div>
+              <br>
+              <br>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+  document.getElementById('generatePasswordBtn').addEventListener('click', function() {
+      var password = generatePassword();
+      document.getElementById('password').value = password;
+  });
+
+  function generatePassword() {
+      var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+      var passwordLength = 12;
+      var password = "";
+      for (var i = 0; i < passwordLength; i++) {
+          var randomIndex = Math.floor(Math.random() * chars.length);
+          password += chars[randomIndex];
+      }
+      return password;
+  }
+
+  const profilePicture = document.querySelector('#profile_picture')
+  const imagePreview = document.querySelector('.image-preview')
+
+  profilePicture.addEventListener('change', () => {
+    const url = URL.createObjectURL(profilePicture.files[0])
+    imagePreview.src = url
+  });
+</script>

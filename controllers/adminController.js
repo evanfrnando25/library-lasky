@@ -271,6 +271,11 @@ exports.delete_users = async (req, res) => {
   }
 }
 
+
+exports.add_users = (req, res) => {
+  res.render('admin/users-add')
+}
+
 exports.update_users = async (req, res) => {
   const { role , name, email} = req.body
   const errors = validationResult(req)

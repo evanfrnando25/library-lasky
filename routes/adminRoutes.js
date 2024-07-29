@@ -20,6 +20,7 @@ router.get('/book/:page?', adminController.books)
 router.get('/orders', adminController.view_orders)
 
 // View Users
+router.get('/users/add', adminController.add_users)
 router.delete('/users', adminController.delete_users)
 router.get('/users', adminController.view_users)
 router.put('/users', checkUser, userValidator, adminController.update_users)
